@@ -1,5 +1,6 @@
 package com.example.expensetracker.service;
 
+import com.example.expensetracker.exception.ExpenseNotFoundException;
 import com.example.expensetracker.model.Expense;
 import com.example.expensetracker.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,11 @@ public class ExpenseService {
     }
 
     // Get expense by ID
-    public Optional<Expense> getExpenseById(Long id) {
-        return expenseRepository.findById(id);
+    public Expense getExpenseById(Long id) {
+
+        return expenseRepository.findById(id)
+                .orElseThrow(() -> new ExpenseNotFoundException("Expense not found with id : " + id));
+
     }
 
     // Save or update expense

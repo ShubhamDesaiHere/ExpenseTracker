@@ -27,9 +27,10 @@ public class ExpenseController {
     @GetMapping("/{id}")
     public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
 
-        return expenseService.getExpenseById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Expense expense = expenseService.getExpenseById(id);
+
+        return ResponseEntity.ok(expense);
+
     }
 
     // Create expense
@@ -44,19 +45,16 @@ public class ExpenseController {
     public ResponseEntity<Expense> updateExpense(@PathVariable Long id,
             @RequestBody Expense expense) {
 
-        return expenseService.getExpenseById(id)
-                .map(existingExpense -> {
+        Expense existingExpense = expenseService.getExpenseById(id);
 
-                    existingExpense.setDescription(expense.getDescription());
-                    existingExpense.setAmount(expense.getAmount());
-                    existingExpense.setCategory(expense.getCategory());
-                    existingExpense.setDate(expense.getDate());
+        existingExpense.setDescription(expense.getDescription());
+        existingExpense.setAmount(expense.getAmount());
+        existingExpense.setCategory(expense.getCategory());
+        existingExpense.setDate(expense.getDate());
 
-                    Expense updatedExpense = expenseService.saveExpense(existingExpense);
+        Expense updatedExpense = expenseService.saveExpense(existingExpense);
 
-                    return ResponseEntity.ok(updatedExpense);
-
-                }).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(updatedExpense);
     }
 
     // Delete expense
